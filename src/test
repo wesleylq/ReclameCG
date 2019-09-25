@@ -1,0 +1,100 @@
+import React from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+
+import MapView, { ProviderPropType } from 'react-native-maps';
+
+
+
+
+class MapBoundaries extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      region: {
+        latitude:  -7.2420273,
+        longitude: -35.8889979,
+        //latitude: -7.2171315,
+        //longitude: -35.911943,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+      },
+      
+      mapBoundaries: null,
+    };
+  }
+
+  componentDidMount() {
+
+    this.map.setMapBoundaries(
+        northEast = {
+            latitude:  -7.179938,
+            longitude: -35.865104
+        },southWest = {
+            latitude:  -7.309191,
+            longitude: -35.930049
+        }
+    )
+}
+
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <MapView
+          ref={ref => {
+            this.map = ref;
+          }}
+          provider={this.props.provider}
+          style={styles.map}
+          initialRegion={this.state.region}
+          
+        />
+        <View style={styles.buttonContainer}>
+          <View style={styles.bubble}>
+            <Text>{JSON.stringify(this.state.mapBoundaries)}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+MapBoundaries.propTypes = {
+  provider: ProviderPropType,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  bubble: {
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  latlng: {
+    width: 200,
+    alignItems: 'stretch',
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
+});
+
+export default MapBoundaries;
