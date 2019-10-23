@@ -3,17 +3,19 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
 
-import MapView, { Marker, ProviderPropType } from 'react-native-maps';
+import MapView, { Marker, ProviderPropType, Callout } from 'react-native-maps';
+import RNGooglePlaces from 'react-native-google-places';
 import flagPinkImg from './assets/flag-pink.png';
 
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = -7.2420273; 
+const LATITUDE = -7.2420273;
 const LONGITUDE = -35.8889979;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -31,9 +33,15 @@ class Map extends React.Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       markers: [],
+      complain:false
     };
 
     this.onMapPress = this.onMapPress.bind(this);
+  }
+
+  handleComplain(){
+    this.setState({ complain: !this.state.complain});
+    alert("reclamar!")
   }
 
   generateMarkers(fromCoordinate) {
@@ -53,12 +61,15 @@ class Map extends React.Component {
   }
 
   onMapPress(e) {
-    this.setState({
-      markers: [
-        ...this.state.markers,
-        ...this.generateMarkers(e.nativeEvent.coordinate),
-      ],
-    });
+    if (this.state.complain) {
+      this.setState({
+        markers: [
+          ...this.state.markers,
+          ...this.generateMarkers(e.nativeEvent.coordinate),
+        ],
+      });
+    }
+    
   }
 
   render() {
@@ -70,7 +81,7 @@ class Map extends React.Component {
           initialRegion={this.state.region}
           onPress={this.onMapPress}
         >
-          {this.state.markers.map(marker => (
+          { this.state.markers.map(marker => (
             <Marker
               title={marker.key}
               //image={flagPinkImg}
@@ -79,7 +90,26 @@ class Map extends React.Component {
             />
           ))}
         </MapView>
+
+        <View style={{backgroundColor:"grey", height:"20%", width:"100%"}}>
+        <Callout>
+            <View style={styles.calloutView}>
+              <TextInput style={styles.calloutSearch}
+                placeholder={"Search"}
+              />
+            </View>
+          </Callout>
+        </View>
+        
+        
         <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => this.handleComplain()}
+            style={styles.bubble}
+          >
+            <Text>Reclamar</Text>
+          </TouchableOpacity>
+        
           <TouchableOpacity
             onPress={() => this.setState({ markers: [] })}
             style={styles.bubble}
@@ -99,7 +129,7 @@ Map.propTypes = {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   map: {
@@ -125,7 +155,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 20,
     backgroundColor: 'transparent',
+    position: "absolute", bottom: 0, right: 0
   },
+  calloutView: {
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: 10,
+    width: "40%",
+    marginLeft: "30%",
+    marginRight: "30%",
+    marginTop: 20
+  },
+  calloutSearch: {
+    borderColor: "transparent",
+    marginLeft: 10,
+    width: "90%",
+    marginRight: 10,
+    height: 40,
+    borderWidth: 0.0  
+  }
 });
 
 export default Map;
