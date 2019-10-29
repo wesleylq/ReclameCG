@@ -11,6 +11,7 @@ import {
 import MapView, { Marker, ProviderPropType, Callout } from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 import flagPinkImg from './assets/flag-pink.png';
+import ComplaintPanel from './ComplaintPanel';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,7 +34,8 @@ class Map extends React.Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       markers: [],
-      complain:false
+      complain:false,
+      locationSelected: false
     };
 
     this.onMapPress = this.onMapPress.bind(this);
@@ -41,6 +43,7 @@ class Map extends React.Component {
 
   handleComplain(){
     this.setState({ complain: !this.state.complain});
+    this.setState({ locationSelected: false});
     alert("reclamar!")
   }
 
@@ -61,13 +64,18 @@ class Map extends React.Component {
   }
 
   onMapPress(e) {
-    if (this.state.complain) {
+    if (this.state.complain && !this.state.markers.length) {
       this.setState({
         markers: [
           ...this.state.markers,
           ...this.generateMarkers(e.nativeEvent.coordinate),
         ],
       });
+      this.setState({locationSelected: true})
+    }
+    else {
+      this.setState({locationSelected: false})
+      this.setState({markers: []})
     }
     
   }
@@ -116,7 +124,10 @@ class Map extends React.Component {
           >
             <Text>Limpar marcadores</Text>
           </TouchableOpacity>
-        </View>
+        </View> 
+        {
+          this.state.locationSelected && <ComplaintPanel></ComplaintPanel>
+        } 
       </View>
     );
   }
