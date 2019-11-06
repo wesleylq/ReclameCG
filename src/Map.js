@@ -64,7 +64,7 @@ class Map extends React.Component {
   }
 
   onMapPress(e) {
-    if (this.state.complain && !this.state.markers.length) {
+    if (this.state.complain) {
       this.setState({
         markers: [
           ...this.state.markers,
@@ -72,12 +72,8 @@ class Map extends React.Component {
         ],
       });
       this.setState({locationSelected: true})
-    }
-    else {
-      this.setState({locationSelected: false})
-      this.setState({markers: []})
-    }
-    
+      this.setState({complain: false})
+    }   
   }
 
   render() {
@@ -124,10 +120,7 @@ class Map extends React.Component {
           >
             <Text>Limpar marcadores</Text>
           </TouchableOpacity>
-        </View> 
-        {
-          this.state.locationSelected && <ComplaintPanel></ComplaintPanel>
-        } 
+        </View>
       </View>
     );
   }
