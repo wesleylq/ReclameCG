@@ -6,6 +6,10 @@ import {
   TextInput,
   Dimensions,
   TouchableOpacity,
+  SafeAreaView,
+  FlatList,
+  Button
+  
 } from 'react-native';
 
 import MapView, { Marker, ProviderPropType, Callout } from 'react-native-maps';
@@ -33,13 +37,22 @@ class Map extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+
       markers: [],
       complain:false,
-      locationSelected: false
+      locationSelected: false,
+      search: '-',
+      search2: '',
+      count: 0,
+      bairros: [{bairro : 'A', id: 1},  {bairro: 'Aaa', id : 2}]
     };
-
     this.onMapPress = this.onMapPress.bind(this);
   }
+
+
+  handleSearch = (text) => {
+    this.setState({ search: text })
+ }
 
   handleComplain(){
     this.setState({ complain: !this.state.complain});
@@ -76,31 +89,48 @@ class Map extends React.Component {
     }   
   }
 
+  filteredBairros = () => {
+    var bairro = this.state.bairros.filter( i => {
+      var str = i.bairro
+      var substr = this.state.search
+      if((str.indexOf(substr) > -1) && str.length >= substr.length ){
+        return i
+      }
+    })
+    
+    return bairro
+  }
+
+renderItem = ({ item }) => {
+  return (
+    <TouchableOpacity onPress={() => alert("pressed!")} key={item.bairro}>
+      <Text style={{ width: "100%", height: 40, backgroundColor: "white", alignItems: 'center' }}>
+        {item.bairro}
+      </Text>
+    </TouchableOpacity>
+  );
+};
   render() {
     return (
       <View style={styles.container}>
-        <MapView
-          provider={this.props.provider}
-          style={styles.map}
-          initialRegion={this.state.region}
-          onPress={this.onMapPress}
-        >
-          { this.state.markers.map(marker => (
-            <Marker
-              title={marker.key}
-              //image={flagPinkImg}
-              key={marker.key}
-              coordinate={marker.coordinate}
-            />
-          ))}
-        </MapView>
-
-        <View style={{backgroundColor:"grey", height:"20%", width:"100%"}}>
+        <View style={{backgroundColor:"grey", height:"20%", width:"100%", position: "absolute"}}>
         <Callout>
             <View style={styles.calloutView}>
-              <TextInput style={styles.calloutSearch}
+              <TextInput style={styles.calloutSearch} onChangeText = {this.handleSearch}
                 placeholder={"Search"}
               />
+              <View>
+                <SafeAreaView >
+               
+                  <FlatList
+                    data={this.filteredBairros()}
+                    renderItem={this.renderItem}
+                   // renderItem={({ item }) => <Item item={item.bairro}/>}
+                    keyExtractor={item => item.bairro}
+                  />
+                </SafeAreaView>
+              </View>
+              {console.log(this.state.count)}
             </View>
           </Callout>
         </View>
@@ -131,6 +161,19 @@ Map.propTypes = {
 };
 
 const styles = StyleSheet.create({
+  item: {
+    backgroundColor: '#ffffff',
+    alignItems: 'center'
+  },
+  buttonTouchable: {
+    position: 'absolute',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    marginBottom: 10
+  },
+  title: {
+    fontSize: 20,
+  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-start',
@@ -162,13 +205,13 @@ const styles = StyleSheet.create({
     position: "absolute", bottom: 0, right: 0
   },
   calloutView: {
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 10,
-    width: "40%",
-    marginLeft: "30%",
-    marginRight: "30%",
-    marginTop: 20
+    marginTop: 20,
+    width: 150,
+    marginRight: '30%',
+    marginLeft: '30%',
   },
   calloutSearch: {
     borderColor: "transparent",
