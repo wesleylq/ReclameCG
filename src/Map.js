@@ -73,7 +73,15 @@ class Map extends React.Component {
       });
       this.setState({locationSelected: true})
       this.setState({complain: false})
-    }   
+      
+      const state = this.props.navigation;
+
+      this.props.navigation.navigate('ComplaintPanel', {
+        local: this.state.region,
+        goBackKey: state.key
+      });
+    }
+    // alert(this.state.region);
   }
 
   render() {
