@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import styles from "./MapStyle"
+
 import MapView, { Marker, ProviderPropType, Callout } from 'react-native-maps';
-import RNGooglePlaces from 'react-native-google-places';
-import flagPinkImg from './assets/flag-pink.png';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,15 +34,43 @@ class Map extends React.Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       markers: [],
-      complain:false
+      complain:false,
+      locationSelected: false,
+      marker: null
     };
-
     this.onMapPress = this.onMapPress.bind(this);
+    this.markerPress = this.markerPress.bind(this);
   }
+
+  _onMarkerPress = e => {
+    const coordinate = e.nativeEvent.coordinate;
+    const marker = this.state.markers.find(
+      m => m.coordinate.latitude === coordinate.latitude && m.coordinate.longitude === coordinate.longitude
+    );
+    if (marker) {
+      //this.props.onMarkerPress(marker);
+      console.log(marker)
+    }
+  };
 
   handleComplain(){
     this.setState({ complain: !this.state.complain});
+    this.setState({ locationSelected: false});
     alert("reclamar!")
+  }
+
+  handleCategory(ctg){
+    this.setState({ category: ctg});
+    if (ctg == "agua") {
+      this.setState({ color: "blue"});
+    } else if(ctg == "eletr") {
+      this.setState({ color: "yellow"});
+    }else if(ctg == "patr") {
+      this.setState({ color: "red"});
+    }else if(ctg == "infra") {
+      this.setState({ color: "green"});
+    }
+    
   }
 
   generateMarkers(fromCoordinate) {
@@ -53,7 +82,10 @@ class Map extends React.Component {
           latitude: latitude,
           longitude: longitude,
         },
-        key: `Marcação ${id++}`,
+        key: `id: ${id++}`,
+        color: this.state.color,
+        category: this.state.category,
+        description: this.state.text
       };
       result.push(newMarker);
     }
@@ -61,15 +93,35 @@ class Map extends React.Component {
   }
 
   onMapPress(e) {
-    if (this.state.complain) {
-      this.setState({
-        markers: [
-          ...this.state.markers,
-          ...this.generateMarkers(e.nativeEvent.coordinate),
-        ],
-      });
+    if (this.state.complain && !this.state.locationSelected) {
+      this.setState({marker: e.nativeEvent.coordinate});
+      this.setState({locationSelected: true})
     }
+   
     
+  }
+  markerPress(e) {
+  
+    console.log(e)
+    
+    
+  }
+
+  handleConfirm(){
+    this.setState({
+      markers: [
+        ...this.state.markers,
+        ...this.generateMarkers(this.state.marker),
+      ],
+    });
+    this.setState({locationSelected: false})
+    this.setState({ complain: false});
+    alert("Reclamção registrada!")
+  }
+  
+  handleCancel(){
+    this.setState({locationSelected: false})
+    this.setState({ complain: false});
   }
 
   render() {
@@ -80,12 +132,16 @@ class Map extends React.Component {
           style={styles.map}
           initialRegion={this.state.region}
           onPress={this.onMapPress}
+          onMarkerPress={this._onMarkerPress}
         >
           { this.state.markers.map(marker => (
             <Marker
+              //onPress={this.markerPress(marker.key)}
               title={marker.key}
               //image={flagPinkImg}
               key={marker.key}
+              description={marker.description}
+              pinColor={marker.color}
               coordinate={marker.coordinate}
             />
           ))}
@@ -110,13 +166,60 @@ class Map extends React.Component {
             <Text>Reclamar</Text>
           </TouchableOpacity>
         
-          <TouchableOpacity
-            onPress={() => this.setState({ markers: [] })}
-            style={styles.bubble}
-          >
-            <Text>Limpar marcadores</Text>
+         
+        </View> 
+        {
+          this.state.locationSelected && <View style={styles.categoryPanel}>
+          <Text style={styles.hello}>Aqui vai o endereço!!</Text>
+          <Text style={styles.hello}>SELECIONE UMA CATEGORIA</Text>
+          <View style={styles.row}>
+              <View style={{flexDirection: 'column'}}>
+                  <TouchableOpacity style={[styles.ctgButtom, {backgroundColor:  'green'}]} onPress={() => this.handleCategory("infra")}>
+                      <View>
+                          <Text style={styles.buttomTxt}>Infra</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <Text style={styles.buttomLabel}>Infraestrutura</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                  <TouchableOpacity style={[styles.ctgButtom, {backgroundColor:  'blue'}]} onPress={() => this.handleCategory("agua")}>
+                      <View>
+                          <Text style={styles.buttomTxt}>Água</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <Text style={styles.buttomLabel}>Água e Esgoto</Text>
+              </View>
+          </View>
+          <View style={styles.row}>
+              <View style={{flexDirection: 'column'}}>
+                  <TouchableOpacity style={[styles.ctgButtom, {backgroundColor:  'red'}]} onPress={() => this.handleCategory("patr")}>
+                      <View>
+                          <Text style={styles.buttomTxt}>Patr</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <Text style={styles.buttomLabel}>Patrimônio Público</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                  <TouchableOpacity style={[styles.ctgButtom, {backgroundColor:  'yellow'}]} onPress={() => this.handleCategory("eletr")}>
+                      <View>
+                          <Text style={styles.buttomTxt}>Eletr</Text>
+                      </View>
+                  </TouchableOpacity>
+                  <Text style={styles.buttomLabel}>Energia</Text>
+              </View>
+          </View>
+          <TextInput style={styles.description} multiline={true} numberOfLines={3} placeholder="Descrição"
+              onChangeText={(text) => this.setState({ text })}
+              value={this.state.text} />
+          <TouchableOpacity style={styles.confirmButtom} onPress={() => this.handleConfirm()}>
+            <Text style={styles.cancelTxt}>Confirmar</Text>
           </TouchableOpacity>
-        </View>
+
+          <TouchableOpacity style={styles.cancelButtom} onPress={() => this.handleCancel()}>
+            <Text style={styles.cancelTxt}>Cancelar</Text>
+          </TouchableOpacity>
+      </View>
+        } 
       </View>
     );
   }
@@ -126,54 +229,5 @@ Map.propTypes = {
   provider: ProviderPropType,
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  latlng: {
-    width: 200,
-    alignItems: 'stretch',
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
-    position: "absolute", bottom: 0, right: 0
-  },
-  calloutView: {
-    flexDirection: "row",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 10,
-    width: "40%",
-    marginLeft: "30%",
-    marginRight: "30%",
-    marginTop: 20
-  },
-  calloutSearch: {
-    borderColor: "transparent",
-    marginLeft: 10,
-    width: "90%",
-    marginRight: 10,
-    height: 40,
-    borderWidth: 0.0  
-  }
-});
 
 export default Map;
