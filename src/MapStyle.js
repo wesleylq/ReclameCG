@@ -57,7 +57,7 @@ export default StyleSheet.create({
       fontSize: 14,
       fontWeight: 'bold',
       alignSelf: 'center',
-      marginBottom: 10
+      marginBottom: 20,
   },
   categoryPanel: {
       backgroundColor: 'white',
@@ -68,7 +68,31 @@ export default StyleSheet.create({
       width: 330,
       paddingHorizontal: 30,
       position: 'absolute',
-      bottom: 0
+      bottom: 0,
+      flex: 1
+  },
+  complaintPanel: {
+    backgroundColor: 'white',
+    paddingTop: 50,
+    paddingBottom: 30,
+    borderRadius: 10,
+    width: '90%',
+    paddingHorizontal: 30,
+    position: 'absolute',
+    bottom: 20,
+  },
+  complaintData: {
+    color: 'black',
+    fontSize: 18,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    padding: 5
+  },
+  complaintDataLabel: {
+    color: 'blue',
+    fontSize: 18,
+    marginBottom: 5,
   },
   ctgButtom: {
       width: 40,

@@ -64,13 +64,13 @@ class Map extends React.Component {
 
   handleCategory(ctg) {
     this.setState({ category: ctg });
-    if (ctg == "agua") {
+    if (ctg == "Água/Esgoto") {
       this.setState({ color: "blue" });
-    } else if (ctg == "eletr") {
+    } else if (ctg == "Energia") {
       this.setState({ color: "yellow" });
-    } else if (ctg == "patr") {
+    } else if (ctg == "Patrimônio público") {
       this.setState({ color: "red" });
-    } else if (ctg == "infra") {
+    } else if (ctg == "Infraestrutura") {
       this.setState({ color: "green" });
     }
 
@@ -148,7 +148,7 @@ class Map extends React.Component {
               title={marker.key}
               //image={flagPinkImg}
               key={marker.key}
-              description={marker.description}
+              // description={marker.description}
               pinColor={marker.color}
               coordinate={marker.coordinate}
             />
@@ -182,7 +182,7 @@ class Map extends React.Component {
             <Text style={styles.hello}>SELECIONE UMA CATEGORIA</Text>
             <View style={styles.row}>
               <View style={{ flexDirection: 'column' }}>
-                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'green' }]} onPress={() => this.handleCategory("infra")}>
+                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'green' }]} onPress={() => this.handleCategory("Infraestrutura")}>
                   <View>
                     <Text style={styles.buttomTxt}>Infra</Text>
                   </View>
@@ -190,7 +190,7 @@ class Map extends React.Component {
                 <Text style={styles.buttomLabel}>Infraestrutura</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'blue' }]} onPress={() => this.handleCategory("agua")}>
+                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'blue' }]} onPress={() => this.handleCategory("Água/Esgoto")}>
                   <View>
                     <Text style={styles.buttomTxt}>Água</Text>
                   </View>
@@ -200,7 +200,7 @@ class Map extends React.Component {
             </View>
             <View style={styles.row}>
               <View style={{ flexDirection: 'column' }}>
-                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'red' }]} onPress={() => this.handleCategory("patr")}>
+                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'red' }]} onPress={() => this.handleCategory("Patrimônio público")}>
                   <View>
                     <Text style={styles.buttomTxt}>Patr</Text>
                   </View>
@@ -208,7 +208,7 @@ class Map extends React.Component {
                 <Text style={styles.buttomLabel}>Patrimônio Público</Text>
               </View>
               <View style={{ flexDirection: 'column' }}>
-                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'yellow' }]} onPress={() => this.handleCategory("eletr")}>
+                <TouchableOpacity style={[styles.ctgButtom, { backgroundColor: 'yellow' }]} onPress={() => this.handleCategory("Energia")}>
                   <View>
                     <Text style={styles.buttomTxt}>Eletr</Text>
                   </View>
@@ -231,9 +231,21 @@ class Map extends React.Component {
 
         {
           this.state.markerSelected &&
-          <View style={styles.categoryPanel}>
-            <Text style={styles.hello}>{this.state.marker.key}</Text>
-            <Text style={styles.hello}>{this.state.marker.description}</Text>
+          <View style={styles.complaintPanel}>
+            <View>
+              <Text style={styles.complaintDataLabel}>ID:  </Text>
+              <Text style={styles.complaintData}>{this.state.marker.key.substring(4, this.state.marker.key.length)}</Text>
+            </View>
+
+            <View>
+              <Text style={styles.complaintDataLabel}>Categoria:  </Text>
+              <Text style={styles.complaintData}>{this.state.category}</Text>
+            </View>
+
+            <View>
+              <Text style={styles.complaintDataLabel}>Descrição:  </Text>
+              <Text style={styles.complaintData}>{this.state.marker.description}</Text>
+            </View>
           </View>
         }
       </View>
