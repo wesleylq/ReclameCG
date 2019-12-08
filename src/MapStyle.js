@@ -32,13 +32,15 @@ export default StyleSheet.create({
       position: "absolute", bottom: 0, right: 0
     },
     calloutView: {
-      flexDirection: "row",
+      flexDirection: "column",
       backgroundColor: "rgba(255, 255, 255, 0.9)",
       borderRadius: 10,
-      width: "40%",
-      marginLeft: "30%",
-      marginRight: "30%",
-      marginTop: 20
+     
+      marginTop: 20,
+      marginTop: 20,
+      width: 150,
+      marginRight: '30%',
+      marginLeft: '30%',
     },
     calloutSearch: {
       borderColor: "transparent",
@@ -57,7 +59,7 @@ export default StyleSheet.create({
       fontSize: 14,
       fontWeight: 'bold',
       alignSelf: 'center',
-      marginBottom: 10
+      marginBottom: 20
   },
   categoryPanel: {
       backgroundColor: 'white',
@@ -68,7 +70,31 @@ export default StyleSheet.create({
       width: 330,
       paddingHorizontal: 30,
       position: 'absolute',
-      bottom: 0
+      bottom: 0,
+      flex: 1
+  },
+  complaintPanel: {
+    backgroundColor: 'white',
+    paddingTop: 50,
+    paddingBottom: 30,
+    borderRadius: 10,
+    width: '90%',
+    paddingHorizontal: 30,
+    position: 'absolute',
+    bottom: 20,
+  },
+  complaintData: {
+    color: 'black',
+    fontSize: 18,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    padding: 5
+  },
+  complaintDataLabel: {
+    color: 'blue',
+    fontSize: 18,
+    marginBottom: 5,
   },
   ctgButtom: {
       width: 40,
@@ -130,5 +156,18 @@ export default StyleSheet.create({
   cancelTxt: {
     textAlign: 'center',
     color: 'white'
-  }
+  },
+  item: {
+    backgroundColor: '#ffffff',
+    alignItems: 'center'
+  },
+  buttonTouchable: {
+    position: 'absolute',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    marginBottom: 10
+  },
+  title: {
+    fontSize: 20,
+  },
   });
