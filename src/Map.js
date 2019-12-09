@@ -242,43 +242,38 @@ class Map extends React.Component {
             />
           ))}
         </MapView>
-
-        <View style={styles.topBar}>
-          <Callout style={styles.callout}>
-            <View style={styles.calloutView}>
-              <TextInput
-                style={styles.calloutSearch}
-                placeholder={'Pesquise aqui...'}
-                onChangeText={this.handleSearch}
-                value={this.state.search}
-              />
-            </View>
-            <View>
-              <SafeAreaView>
-                {this.filteredBairros().map(i => {
-                  return (
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.handleSearchFull(i.bairro, i.latitude, i.latitude)
-                      }
-                      key={i.bairro}>
-                      <Text
-                        style={{
-                          width: '100%',
-                          height: 40,
-                          backgroundColor: 'white',
-                          alignItems: 'center',
-                        }}>
-                        {i.bairro}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </SafeAreaView>
-            </View>
-          </Callout>
-        </View>
-
+        <Callout style={styles.callout}>
+          <View style={styles.calloutView}>
+            <TextInput
+              style={styles.calloutSearch}
+              placeholder={'Pesquise aqui...'}
+              onChangeText={this.handleSearch}
+              value={this.state.search}
+            />
+          </View>
+    
+          <SafeAreaView>
+            {this.filteredBairros().map(i => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    this.handleSearchFull(i.bairro, i.latitude, i.latitude)
+                  }
+                  key={i.bairro}>
+                  <Text
+                    style={{
+                      width: '100%',
+                      height: 40,
+                      backgroundColor: 'white',
+                      alignItems: 'center',
+                    }}>
+                    {i.bairro}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </SafeAreaView>
+        </Callout>
         <View style={styles.floatButtonContainer}>
           <TouchableOpacity
             onPress={() => this.handleComplain()}

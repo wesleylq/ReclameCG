@@ -10,6 +10,8 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   topBar: {
+    position: 'absolute',
+    marginTop: 25,
     backgroundColor: 'transparent',
     height: '20%',
     width: '100%',
@@ -22,6 +24,7 @@ export default StyleSheet.create({
   },
   // Barra de pesquisa
   calloutView: {
+    marginTop: 20,
     backgroundColor: 'rgb(255, 255, 255)',
     borderRadius: 10,
     width: '100%',
@@ -30,11 +33,11 @@ export default StyleSheet.create({
       width: 0,
       height: 0,
     },
-    elevation: 10,
   },
   // Input da barra de pesquisa
   calloutSearch: {
     marginLeft: 20,
+    marginTop: 10,
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
   },
